@@ -28,7 +28,6 @@ from std_msgs.msg import (
     Empty,
 )
 
-from util.wall_controller import *
 from environment.srv import * 
 from util.goal_management import * 
 
@@ -142,8 +141,6 @@ def init():
 
     rospy.sleep(3)
     load_gazebo_models()
-    raiseWall()
-    rospy.sleep(5)
     frameid_var = "/world"
 
     rospy.wait_for_service('/gazebo/get_model_state')
@@ -260,8 +257,6 @@ def handle_environment_request(req):
             rospy.sleep(3)
             load_gazebo_models()
             rospy.sleep(1)
-            raiseWall()
-            rospy.sleep(1)
             return HandleEnvironmentSrvResponse(1)
         except rospy.ServiceException, e:
             rospy.logerr("Init environment call failed: {0}".format(e))
@@ -282,8 +277,6 @@ def handle_environment_request(req):
             # _moveRightArmToStart()
             rospy.sleep(3)
             load_gazebo_models()
-            rospy.sleep(1)
-            raiseWall()
             rospy.sleep(1)
             return HandleEnvironmentSrvResponse(1)
 
