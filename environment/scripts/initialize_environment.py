@@ -29,7 +29,6 @@ from std_msgs.msg import (
 )
 
 from util.wall_controller import *
-from util.physical_agent import PhysicalAgent
 from environment.srv import * 
 from util.goal_management import * 
 
@@ -66,7 +65,6 @@ def load_gazebo_models(table_pose=Pose(position=Point(x=1, y=0.0, z=0.0)),
     ############################################################################
     ###### Spawn URDFs
 
-
     cover_xml = ''
     with open (model_path + "cup_with_cover/cover_model.urdf", "r") as cover_file:
         cover_xml=cover_file.read().replace('\n', '')
@@ -79,8 +77,6 @@ def load_gazebo_models(table_pose=Pose(position=Point(x=1, y=0.0, z=0.0)),
     except rospy.ServiceException, e:
         rospy.logerr("Spawn URDF service call failed: {0}".format(e))
 
-
-
     cup_xml = ''
     with open (model_path + "cup_with_cover/cup_model.urdf", "r") as cup_file:
         cup_xml=cup_file.read().replace('\n', '')
@@ -91,8 +87,6 @@ def load_gazebo_models(table_pose=Pose(position=Point(x=1, y=0.0, z=0.0)),
                                cup_pose, reference_frame)
     except rospy.ServiceException, e:
         rospy.logerr("Spawn URDF service call failed: {0}".format(e))
-
-
 
 def delete_gazebo_models():
     try:
@@ -119,33 +113,33 @@ def blockPoseToGripper(poseVar):
     newPoseStamped = PoseStamped(header = poseVar.header, pose = newPose)
     return newPoseStamped
 
-def _moveLeftArmToStart():
-    pa = PhysicalAgent('left_gripper')
-    starting_joint_angles_l = {'left_w0': 0.6699952259595108,
-                               'left_w1': 1.030009435085784,
-                               'left_w2': -0.4999997247485215,
-                               'left_e0': -1.189968899785275,
-                               'left_e1': 1.9400238130755056,
-                               'left_s0': -0.08000397926829805,
-                               'left_s1': -0.9999781166910306}
-    pa.move_to_start(starting_joint_angles_l)
+# def _moveLeftArmToStart():
+#     pa = PhysicalAgent('left_gripper')
+#     starting_joint_angles_l = {'left_w0': 0.6699952259595108,
+#                                'left_w1': 1.030009435085784,
+#                                'left_w2': -0.4999997247485215,
+#                                'left_e0': -1.189968899785275,
+#                                'left_e1': 1.9400238130755056,
+#                                'left_s0': -0.08000397926829805,
+#                                'left_s1': -0.9999781166910306}
+#     pa.move_to_start(starting_joint_angles_l)
 
-def _moveRightArmToStart():
-    pa = PhysicalAgent('right_gripper')
-    starting_joint_angles_r = {'right_e0': -0.39888044530362166,
-                                'right_e1': 1.9341522973651006,
-                                'right_s0': 0.936293285623961,
-                                'right_s1': -0.9939970420424453,
-                                'right_w0': 0.27417171168213983,
-                                'right_w1': 0.8298780975195674,
-                                'right_w2': -0.5085333554167599}
-    pa.move_to_start(starting_joint_angles_r)
-
+# def _moveRightArmToStart():
+#     pa = PhysicalAgent('right_gripper')
+#     starting_joint_angles_r = {'right_e0': -0.39888044530362166,
+#                                 'right_e1': 1.9341522973651006,
+#                                 'right_s0': 0.936293285623961,
+#                                 'right_s1': -0.9939970420424453,
+#                                 'right_w0': 0.27417171168213983,
+#                                 'right_w1': 0.8298780975195674,
+#                                 'right_w2': -0.5085333554167599}
+#     pa.move_to_start(starting_joint_angles_r)
 
 def init():
 
-    _moveLeftArmToStart()
-    _moveRightArmToStart()
+    # _moveLeftArmToStart()
+    # _moveRightArmToStart()
+
     rospy.sleep(3)
     load_gazebo_models()
     raiseWall()
@@ -154,11 +148,11 @@ def init():
 
     rospy.wait_for_service('/gazebo/get_model_state')
     rospy.wait_for_service('/gazebo/get_link_state')
-    
+
     while pub == True:
-        
+
         rate = rospy.Rate(10) # 10hz
-        
+
         #Get cafe_table pose
         try:
             cafe_table_ms = rospy.ServiceProxy('/gazebo/get_model_state', GetModelState)
@@ -172,8 +166,6 @@ def init():
             rospy.logerr("get_model_state for cafe_table service call failed: {0}".format(e))
 
         #### Get plastic_cup pose
-
-
         try:
             cover_ms = rospy.ServiceProxy('/gazebo/get_model_state', GetModelState)
             resp_cover_ms = cover_ms("cover", "");
@@ -185,8 +177,6 @@ def init():
         except rospy.ServiceException, e:
             rospy.logerr("get_model_state for block service call failed: {0}".format(e))
 
-
-
         try:
             cup_ms = rospy.ServiceProxy('/gazebo/get_model_state', GetModelState)
             resp_cup_ms = cup_ms("cup", "");
@@ -197,7 +187,6 @@ def init():
             pub_cup_pose.publish(poseStamped_cup)
         except rospy.ServiceException, e:
             rospy.logerr("get_model_state for block service call failed: {0}".format(e))
-
 
 ###################################################################################################
 ###  START: Gripper stuff 
@@ -266,8 +255,8 @@ def handle_environment_request(req):
     if req.action == "init":
         #pub = True
         try:
-            _moveLeftArmToStart()
-            _moveRightArmToStart()
+            # _moveLeftArmToStart()
+            # _moveRightArmToStart()
             rospy.sleep(3)
             load_gazebo_models()
             rospy.sleep(1)
@@ -289,8 +278,8 @@ def handle_environment_request(req):
     elif req.action == 'restart':
         try:
             ##pub = False
-            _moveLeftArmToStart()
-            _moveRightArmToStart()
+            # _moveLeftArmToStart()
+            # _moveRightArmToStart()
             rospy.sleep(3)
             load_gazebo_models()
             rospy.sleep(1)
