@@ -32,13 +32,29 @@ from std_msgs.msg import (
     Empty,
 )
 
+robot = moveit_commander.RobotCommander()
+arm_group = moveit_commander.MoveGroupCommander("manipulator")
+grp_group = moveit_commander.MoveGroupCommander("gripper")
+
+
+CupPose = None
+CoverPose = None
+
+def setPoseCup(data):
+    global CupPose
+    CupPose = data
+
+def setPoseCover(data):
+    global CoverPose
+    CoverPose = data
+    
+
 def addnoise_pose():
     overhead_orientation = Quaternion(
                             x=-0.0249590815779,
                             y=0.999649402929,
                             z=0.00737916180073,
                             w=0.00486450832011)
-    #pose = Pose(position= Point(x=0.7, y=0.15, z=-0.129), orientation=overhead_orientation)
     pose = Pose(position= Point(x=-0.3, y=0, z=0.8), orientation=overhead_orientation)
     x = random.uniform(-0.09, 0.09)
     y = random.uniform(-0.09, 0.09)
@@ -70,34 +86,18 @@ def approach(pose):
     arm_group.set_pose_target(approachPose)
     arm_group.go(wait=True)
 	
-def pick(pose, filename):
-    fn = "ur5_grasp_model_" + filename
-    filename = "ur5_pick_model_" + filename
-    #rps = start_rosbag_recording(fn)
-    time.sleep(0.5)
+def pick(pose):
     gripper_open()
     approach(pose)
     move_to_pose(pose)
     gripper_close()
-    #stop_rosbag_recording(rps)
-    #rosbag_process = start_rosbag_recording(filename)
-    time.sleep(0.5)
     approach(pose)
-    #stop_rosbag_recording(rosbag_process)
 
-def place(pose, filename):
-    fn = "ur5_place_model" + filename
-    #rosbag_process = start_rosbag_recording(fn)
+def place(pose):
     approach(pose)
     move_to_pose(pose)
     gripper_open()
-    #stop_rosbag_recording(rosbag_process)
     approach(pose)
-
-robot = moveit_commander.RobotCommander()
-arm_group = moveit_commander.MoveGroupCommander("manipulator")
-grp_group = moveit_commander.MoveGroupCommander("gripper")
-
 
 def main():
     rospy.init_node('pick_and_place_node', anonymous=True)
@@ -105,32 +105,30 @@ def main():
     filename = '0'
     num_of_run = 1  
 
-    move_to_start()
-    init()
-
-    # block_pose = Pose(position=Point(x=-0.2, y= 0, z=0.6))
-
-    # for iBlock in range(0,12):
-
-    #     print("Block " + str(iBlock))
-    #     filename = str(iBlock)
-
-    #     for run in range(0, num_of_run):
-    #         if(not rospy.is_shutdown()):
-    #             print("Picking up block")
-    #             pick(block_pose, filename)
-    #             placePose = addnoise_pose()
-    #             print("Placing block")
-    #             place(placePose, filename)
-    #             gripper_open()
-    #             move_to_start()
+    rospy.Subscriber("cover_pose", PoseStamped, setPoseCover)
+    rospy.Subscriber("cup_pose", PoseStamped, setPoseCup)
 
 
-    #             #delete_gazebo_block()
-    #             #load_gazebo_block(filename)
-    #         else:
-    #             break   
-    rospy.spin()
+    while(CoverPose == None):
+        rospy.sleep(1)
+
+    item_to_pickup = CoverPose.pose
+
+    for i in range(0,12):
+
+        if(not rospy.is_shutdown()):
+            print("Picking up block")
+            pick(item_to_pickup)
+            placePose = addnoise_pose()
+            print("Placing block")
+            place(placePose)
+            gripper_open()
+            move_to_start()
+        else:
+            break   
+
+
+    # rospy.spin()
     return 0
 
 if __name__ == '__main__':
