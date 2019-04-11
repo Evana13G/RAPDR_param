@@ -114,7 +114,7 @@ def main():
 
     item_to_pickup = CoverPose.pose
 
-    for i in range(0,12):
+    for i in range(0,3):
 
         if(not rospy.is_shutdown()):
             print("Picking up block")

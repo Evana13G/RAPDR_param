@@ -41,8 +41,8 @@ pub_cover_pose = rospy.Publisher('cover_pose', PoseStamped, queue_size = 10)
 arm_group = moveit_commander.MoveGroupCommander("manipulator")
 # grp_group = moveit_commander.MoveGroupCommander("gripper")
 
-def load_gazebo_models(cup_pose=Pose(position=Point(x=-0.1, y=0.0, z=0.7)),
-                       cover_pose=Pose(position=Point(x=-0.1, y=0.0, z=0.7)),
+def load_gazebo_models(cup_pose=Pose(position=Point(x=0.0, y=0.0, z=0.7)),
+                       cover_pose=Pose(position=Point(x=0.0, y=0.0, z=0.7)),
                        reference_frame="world"):
     
     # Get Models' Path
@@ -94,7 +94,7 @@ def move_to_start():
 def init():
     rospy.sleep(3)
     load_gazebo_models()
-    frameid_var = "/base"
+    frameid_var = "/world"
     while pub == True:
 
         rate = rospy.Rate(10) # 10hz
@@ -104,7 +104,7 @@ def init():
         #### Get plastic_cup pose
         try:
             cover_ms = rospy.ServiceProxy('/gazebo/get_model_state', GetModelState)
-            resp_cover_ms = cover_ms("cover", "/base");
+            resp_cover_ms = cover_ms("cover", "");
             pose_cover = resp_cover_ms.pose
             header_cover = resp_cover_ms.header
             header_cover.frame_id = frameid_var
@@ -115,7 +115,7 @@ def init():
 
         try:
             cup_ms = rospy.ServiceProxy('/gazebo/get_model_state', GetModelState)
-            resp_cup_ms = cup_ms("cup", "/base");
+            resp_cup_ms = cup_ms("cup", "");
             pose_cup = resp_cup_ms.pose
             header_cup = resp_cup_ms.header
             header_cup.frame_id = frameid_var
