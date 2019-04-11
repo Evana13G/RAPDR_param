@@ -27,7 +27,7 @@
     <arg name="debug" default="$(arg debug)" />
     <arg name="sim" default="$(arg sim)" />
   </include>
-
-  <node pkg="ur5_single_arm_manipulation" name="execute_trajectory" type="execute_trajectory.py" output="screen" />
+<!--   <node pkg="environment" name="initialize_environment" type="initialize_environment.py" output="screen" />
+ -->
 
 </launch>
