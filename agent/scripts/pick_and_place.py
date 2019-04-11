@@ -55,7 +55,7 @@ def addnoise_pose():
                             y=0.999649402929,
                             z=0.00737916180073,
                             w=0.00486450832011)
-    pose = Pose(position= Point(x=-0.3, y=0, z=0.8), orientation=overhead_orientation)
+    pose = Pose(position= Point(x=-0.3, y=0, z=0.7), orientation=overhead_orientation)
     x = random.uniform(-0.09, 0.09)
     y = random.uniform(-0.09, 0.09)
     pose.position.x = pose.position.x + x
@@ -113,6 +113,7 @@ def main():
         rospy.sleep(1)
 
     item_to_pickup = CoverPose.pose
+    print(item_to_pickup)
 
     for i in range(0,3):
 
