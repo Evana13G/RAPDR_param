@@ -19,11 +19,13 @@ FILES
 MoveToStartSrv.srv
 ApproachSrv.srv
 ToggleGripperStateSrv.srv
+MoveItTestSrv.srv
 OpenGripperSrv.srv 
 BrainSrv.srv
 CloseGripperSrv.srv 
 MoveToObject.srv 
-MoveToButton.srv 
+MoveToButton.srv
+PushObjectSrv.srv 
 PressButtonSrv.srv 
 ObtainObjectSrv.srv 
 PartialPlanExecutorSrv.srv
