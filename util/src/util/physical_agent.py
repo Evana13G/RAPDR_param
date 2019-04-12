@@ -13,6 +13,9 @@ from gazebo_msgs.srv import (
     SpawnModel,
     DeleteModel,
 )
+
+import geometry_msgs.msg
+
 from geometry_msgs.msg import (
     PoseStamped,
     Pose,
@@ -22,6 +25,7 @@ from geometry_msgs.msg import (
 from std_msgs.msg import (
     Header,
     Empty,
+    String
 )
 
 from baxter_core_msgs.srv import (
@@ -32,7 +36,10 @@ from baxter_core_msgs.srv import (
 from tf.transformations import *
 
 import baxter_interface
-
+import moveit_commander
+import moveit_msgs.msg
+from math import pi
+from moveit_commander.conversions import pose_to_list
 
 class PhysicalAgent(object):
     def __init__(self, hover_distance = 0.1, verbose=False):
@@ -76,13 +83,11 @@ class PhysicalAgent(object):
             return 0
 
     def _approach(self, gripperName, pose):
-        print(pose)
         appr = copy.deepcopy(pose)
         appr.pose.position.z = appr.pose.position.z + self._hover_distance
+
         joint_angles = self.ik_request(gripperName, appr)
         self._guarded_move_to_joint_position(gripperName, joint_angles)
-
-
 
     def _move_to_start(self, limb='both', start_angles=None):
   
@@ -102,7 +107,6 @@ class PhysicalAgent(object):
                                     'right_w2': -0.5085333554167599}
 
         try:
-            print(limb)
             if limb == 'left_gripper' or limb == 'left':
                 if self._verbose:
                     print("Moving the left arm to start pose...")

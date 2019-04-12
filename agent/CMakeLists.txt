@@ -19,6 +19,7 @@ FILES
 MoveToStartSrv.srv
 ApproachSrv.srv
 ToggleGripperStateSrv.srv
+MoveItTestSrv.srv
 OpenGripperSrv.srv 
 BrainSrv.srv
 CloseGripperSrv.srv 

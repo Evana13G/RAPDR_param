@@ -38,16 +38,19 @@ from util.physical_agent import PhysicalAgent
 
 
 CupPose = None
+CoverPose = None
 
 def setPoseCup(data):
     global CupPose
     CupPose = data
     
-
-
+def setPoseCover(data):
+    global CoverPose
+    CoverPose = data
+    
 def hoverOverPose(poseStmpd):
 	newPose = copy.deepcopy(poseStmpd)
-	newPose.pose.position.z += 0.25
+	# newPose.pose.position.z += 0.15
 	return newPose
 
 def handle_pushObject(req):
@@ -55,20 +58,24 @@ def handle_pushObject(req):
     appr = rospy.ServiceProxy('approach_srv', ApproachSrv)
 
     limb = req.limb
-    poseTo = CupPose
-    hover_distance = 0.15
+    obj = req.objectName
 
+    if obj == 'cup': 
+        poseTo = CupPose
+    else:
+        poseTo = CoverPose
 
     if limb == 'left_gripper':
-      appr('left', hoverOverPose(poseTo))
+      # appr('left', hoverOverPose(poseTo))
       appr('left', poseTo)
       appr('left', hoverOverPose(poseTo))
+
     else:
-      appr('right', hoverOverPose(poseTo))
+      # appr('right', hoverOverPose(poseTo))
       appr('right', poseTo)
       appr('right', hoverOverPose(poseTo))
     
-    return PressButtonSrvResponse(1)
+    return PushObjectSrvResponse(1)
 
 
 def main():
@@ -77,7 +84,8 @@ def main():
 
     rospy.wait_for_service('approach_srv', timeout=60)
 
-    rospy.Subscriber("cover_pose", PoseStamped, setPoseCup)
+    rospy.Subscriber("cover_pose", PoseStamped, setPoseCover)
+    rospy.Subscriber("cup_pose", PoseStamped, setPoseCup)
  
     s = rospy.Service("push_object_srv", PushObjectSrv, handle_pushObject)
 
