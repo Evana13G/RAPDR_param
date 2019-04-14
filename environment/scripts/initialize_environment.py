@@ -193,8 +193,18 @@ def main():
     rospy.on_shutdown(delete_gazebo_models)
     
     move_to_start()
-    init()
-
+    # print("##########################")
+    # print(sys.argv)
+    # print(len(sys.argv))
+    # print("$$$$$$$$$$$$$$$$$$$$$$$$")
+    if (len(sys.argv) == 1):
+        init()
+    if (len(sys.argv) == 2):
+        assert (sys.argv[1] == '1' or sys.argv[2] == "2")
+        init(int(sys.argv[1]))
+    else:
+        print("Please provide the proper number of command line arguments")
+        sys.exit(1)
     rospy.spin()
     return 0
 
