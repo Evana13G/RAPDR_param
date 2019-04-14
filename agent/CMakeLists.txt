@@ -17,7 +17,6 @@ add_message_files(
 add_service_files(
 FILES 
 ApproachSrv.srv
-ObtainObjectSrv.srv 
 MoveToStartSrv.srv
 GraspObjectSrv.srv
 CloseGripperSrv.srv 
