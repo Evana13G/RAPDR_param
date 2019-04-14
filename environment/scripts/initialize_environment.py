@@ -41,8 +41,8 @@ pub_cover_pose = rospy.Publisher('cover_pose', PoseStamped, queue_size = 10)
 arm_group = moveit_commander.MoveGroupCommander("manipulator")
 # grp_group = moveit_commander.MoveGroupCommander("gripper")
 
-def load_gazebo_models(cup_pose=Pose(position=Point(x=0.0, y=0.0, z=0.7)),
-                       cover_pose=Pose(position=Point(x=0.0, y=0.0, z=0.7)),
+def load_gazebo_models(cup_pose=Pose(position=Point(x=0.0, y=0.0, z=0.6)),
+                       cover_pose=Pose(position=Point(x=0.0, y=0.0, z=0.6)),
                        reference_frame="world"):
     
     # Get Models' Path

@@ -16,20 +16,15 @@ add_message_files(
 
 add_service_files(
 FILES 
-MoveToStartSrv.srv
 ApproachSrv.srv
-ToggleGripperStateSrv.srv
-MoveItTestSrv.srv
-OpenGripperSrv.srv 
-BrainSrv.srv
-CloseGripperSrv.srv 
-MoveToObject.srv 
-MoveToButton.srv
-PushObjectSrv.srv 
-PressButtonSrv.srv 
 ObtainObjectSrv.srv 
+MoveToStartSrv.srv
+CloseGripperSrv.srv 
+OpenGripperSrv.srv 
+MoveToObject.srv 
+BrainSrv.srv
+PushObjectSrv.srv 
 PartialPlanExecutorSrv.srv
-test.srv
 )
 
 generate_messages(DEPENDENCIES std_msgs geometry_msgs)
