@@ -172,7 +172,6 @@ def main():
     testPoseLinear = copy.deepcopy(testPose)
     testPose.position.x = testPose.position.x + 0.5
 
-
     item_to_pickup = copy.deepcopy(CoverPose.pose)
     item_to_pickup.position.z = item_to_pickup.position.z #+ 0.3
     item_to_pickup.position.y = item_to_pickup.position.y + 0.3
