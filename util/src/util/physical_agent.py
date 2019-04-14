@@ -80,7 +80,7 @@ class PhysicalAgent(object):
             print("Gripper closed")
         return 1
 
-    def _move_to_start(self): 
+    def move_to_start(self): 
         self._arm_group.set_named_target('up') # See UR5 config
         self._arm_group.go(wait=True)
         if self._verbose:

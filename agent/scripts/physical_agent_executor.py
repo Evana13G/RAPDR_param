@@ -32,7 +32,7 @@ from util.physical_agent import PhysicalAgent
 pa = None
 
 def move_to_start(req):
-    return MoveToStartSrvResponse(pa._move_to_start())
+    return MoveToStartSrvResponse(pa.move_to_start())
 
 def open_gripper(req):
     return OpenGripperSrvResponse(pa.gripper_open(req.position))
@@ -40,20 +40,18 @@ def open_gripper(req):
 def close_gripper(req):
     return CloseGripperSrvResponse(pa.gripper_close(req.position))
 
-# def approach(req):
-#     return ApproachSrvResponse(pa._approach(req.gripperName, req.pose))
-
+def approach(req):
+    return ApproachSrvResponse(pa.approach(req.pose))
 
 def main():
-    rospy.init_node("phdysical_agent_node")
+    rospy.init_node("physical_agent_node")
 
     global pa
     pa = PhysicalAgent()
     s_1 = rospy.Service("move_to_start_srv", MoveToStartSrv, move_to_start)
     s_2 = rospy.Service("open_gripper_srv", OpenGripperSrv, open_gripper)
     s_2 = rospy.Service("close_gripper_srv", CloseGripperSrv, close_gripper)
-    
-    # s_3 = rospy.Service("approach_srv", ApproachSrv, approach)
+    s_3 = rospy.Service("approach_srv", ApproachSrv, approach)
 
     rospy.spin()
 

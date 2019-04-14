@@ -258,8 +258,7 @@ def handle_trial(req):
 
 
 def main():
-    rospy.init_node("agent_brain_A")
-    rospy.wait_for_message("/robot/sim/started", Empty)
+    rospy.init_node("agent_brain")
 
     rospy.wait_for_service('APV_srv', timeout=60)
     rospy.wait_for_service('partial_plan_executor_srv', timeout=60)
@@ -270,7 +269,7 @@ def main():
     rospy.wait_for_service('obtain_object_srv', timeout=60)
 
 
-    s = rospy.Service("brain_A_srv", BrainSrv, handle_trial)
+    s = rospy.Service("brain_srv", BrainSrv, handle_trial)
 
     rospy.spin()
 

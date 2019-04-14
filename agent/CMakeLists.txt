@@ -19,6 +19,7 @@ FILES
 ApproachSrv.srv
 ObtainObjectSrv.srv 
 MoveToStartSrv.srv
+GraspObjectSrv.srv
 CloseGripperSrv.srv 
 OpenGripperSrv.srv 
 MoveToObject.srv 
