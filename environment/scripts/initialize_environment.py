@@ -32,17 +32,15 @@ from std_msgs.msg import (
     Empty,
 )
 
+from agent.srv import *
+
 pub = True
 
 pub_cup_pose = rospy.Publisher('cup_pose', PoseStamped, queue_size = 10)
 pub_cover_pose = rospy.Publisher('cover_pose', PoseStamped, queue_size = 10)
 
-# robot = moveit_commander.RobotCommander()
-arm_group = moveit_commander.MoveGroupCommander("manipulator")
-# grp_group = moveit_commander.MoveGroupCommander("gripper")
-
-def load_gazebo_models(cup_pose=Pose(position=Point(x=0.0, y=0.0, z=0.7)),
-                       cover_pose=Pose(position=Point(x=0.0, y=0.0, z=0.7)),
+def load_gazebo_models(cup_pose=Pose(position=Point(x=0.0, y=0.0, z=0.6)),
+                       cover_pose=Pose(position=Point(x=0.0, y=0.0, z=0.6)),
                        reference_frame="world"):
     
     # Get Models' Path
@@ -85,16 +83,17 @@ def delete_gazebo_models():
     except rospy.ServiceException, e:
         rospy.loginfo("Delete Model service call failed: {0}".format(e))
 
-def move_to_start():
-    arm_group.set_named_target('up')
-    arm_group.go(wait=True)
-    print("Moved to start")
-
 
 def init():
-    rospy.sleep(3)
+
+    SRVPROXY_move_to_start = rospy.ServiceProxy('move_to_start_srv', MoveToStartSrv)
+    
+    SRVPROXY_move_to_start()
+
     load_gazebo_models()
     frameid_var = "/world"
+
+
     while pub == True:
 
         rate = rospy.Rate(10) # 10hz
@@ -191,8 +190,8 @@ def main():
     # rospy.wait_for_message("/robot/sim/started", Empty) # causing the assimp error 
 
     rospy.on_shutdown(delete_gazebo_models)
-    
-    move_to_start()
+    rospy.wait_for_service('move_to_start_srv', timeout=60)
+
     init()
 
     rospy.spin()
