@@ -15,8 +15,16 @@
      </geometry>
     </collision>
     <inertial>
-      <mass value="10"/>
-      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+      <mass value="5"/>
+      <inertia ixx="0.2" ixy="0.0" ixz="0.0" iyy="0.2" iyz="0.0" izz="0.1"/>
     </inertial>
   </link>
  </robot>
+
+
+<!--
+ <inertial>
+    <mass value="10"/>
+    <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+</inertial>
+-->
