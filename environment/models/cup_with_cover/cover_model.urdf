@@ -19,6 +19,15 @@
       <inertia ixx="0.2" ixy="0.0" ixz="0.0" iyy="0.2" iyz="0.0" izz="0.1"/>
     </inertial>
   </link>
+    <gazebo reference="cover">
+      <material>Gazebo/Wood</material>
+  </gazebo>
+  <gazebo>
+    <material>Gazebo/Wood</material>
+    <gravity>true</gravity>
+     <mu1>1</mu1>
+     <mu2>1</mu2>
+  </gazebo>
  </robot>
 
 
