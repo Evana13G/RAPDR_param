@@ -24,21 +24,16 @@ from std_msgs.msg import (
     Empty,
 )
 
-from baxter_core_msgs.srv import (
-    SolvePositionIK,
-    SolvePositionIKRequest,
-)
-
-from tf.transformations import *
-
-import baxter_interface
-
 from agent.srv import *
 from util.physical_agent import PhysicalAgent
 
-
 CupPose = None
 CoverPose = None
+
+SRVPROXY_move_to_start = rospy.ServiceProxy('move_to_start_srv', MoveToStartSrv)
+SRVPROXY_open_gripper = rospy.ServiceProxy('open_gripper_srv', OpenGripperSrv)
+SRVPROXY_close_gripper = rospy.ServiceProxy('close_gripper_srv', CloseGripperSrv)
+SRVPROXY_approach = rospy.ServiceProxy('approach_srv', ApproachSrv)
 
 def setPoseCup(data):
     global CupPose
@@ -47,42 +42,25 @@ def setPoseCup(data):
 def setPoseCover(data):
     global CoverPose
     CoverPose = data
-    
-def hoverOverPose(poseStmpd):
-	newPose = copy.deepcopy(poseStmpd)
-	# newPose.pose.position.z += 0.15
-	return newPose
 
 def handle_pushObject(req):
-    
-    appr = rospy.ServiceProxy('approach_srv', ApproachSrv)
 
-    limb = req.limb
     obj = req.objectName
 
     if obj == 'cup': 
         poseTo = CupPose
+    elif obj == 'cover':
+        poseTo = CoverPose
     else:
         poseTo = CoverPose
 
-    if limb == 'left_gripper':
-      # appr('left', hoverOverPose(poseTo))
-      appr('left', poseTo)
-      appr('left', hoverOverPose(poseTo))
+    SRVPROXY_approach(poseTo)
 
-    else:
-      # appr('right', hoverOverPose(poseTo))
-      appr('right', poseTo)
-      appr('right', hoverOverPose(poseTo))
-    
     return PushObjectSrvResponse(1)
 
 
 def main():
-    rospy.init_node("press_button_node")
-    rospy.wait_for_message("/robot/sim/started", Empty)
-
-    rospy.wait_for_service('approach_srv', timeout=60)
+    rospy.init_node("push_button_node")
 
     rospy.Subscriber("cover_pose", PoseStamped, setPoseCover)
     rospy.Subscriber("cup_pose", PoseStamped, setPoseCup)

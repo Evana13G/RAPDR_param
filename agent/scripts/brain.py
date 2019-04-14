@@ -19,7 +19,6 @@ from std_msgs.msg import (
     Empty,
 )
 
-
 def handle_trial(req):
     brainFilePath = os.path.dirname(os.path.realpath(__file__))
     resultsDir = generateResultsDir(brainFilePath, req.runName)
@@ -30,13 +29,13 @@ def handle_trial(req):
     lPA = PhysicalAgent('left_gripper')
     rPA = PhysicalAgent('right_gripper')
     
-    print("\n################################################################################")
-    print("################################################################################")
-    print('## Action Primivitive Discovery in Robotic Agents through Action Segmentation ##')
-    print('## -- a proof of concept model for knowledge aquisition in intelligent agents ##')
-    print('## -- Evana Gizzi, Mateo Guaman Castro, Jivko Sinapov, 2018                   ##')
-    print("################################################################################")
-    print("################################################################################")
+    print("\n#####################################################################################")
+    print("#######################################################################################")
+    print('## Action Primivitive Discovery in Robotic Agents through Action Parameter Variation ##')
+    print('## -- a proof of concept model for knowledge aquisition in intelligent agents        ##')
+    print('## -- Evana Gizzi, Mateo Guaman Castro, Holt Spalding, Jivko Sinapov, 2019           ##')
+    print("#######################################################################################")
+    print("#######################################################################################")
     
     attemptsTime = []
     totalTimeStart = 0
@@ -44,8 +43,10 @@ def handle_trial(req):
     try:
         # Services
         print('\n ... Setting up services')
+        
         planGenerator = rospy.ServiceProxy('plan_generator_srv', PlanGeneratorSrv)
         planExecutor = rospy.ServiceProxy('plan_executor_srv', PlanExecutorSrv)
+
         APV = rospy.ServiceProxy('APV_srv', APVSrv)
         partialActionExecutor = rospy.ServiceProxy('partial_plan_executor_srv', PartialPlanExecutorSrv)
         scenarioData = rospy.ServiceProxy('scenario_data_srv', ScenarioDataSrv)
