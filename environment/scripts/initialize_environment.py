@@ -190,10 +190,27 @@ def main():
     # rospy.wait_for_message("/robot/sim/started", Empty) # causing the assimp error 
 
     rospy.on_shutdown(delete_gazebo_models)
+<<<<<<< HEAD
     rospy.wait_for_service('move_to_start_srv', timeout=60)
 
     init()
 
+=======
+    
+    move_to_start()
+    # print("##########################")
+    # print(sys.argv)
+    # print(len(sys.argv))
+    # print("$$$$$$$$$$$$$$$$$$$$$$$$")
+    if (len(sys.argv) == 1):
+        init()
+    if (len(sys.argv) == 2):
+        assert (sys.argv[1] == '1' or sys.argv[2] == "2")
+        init(int(sys.argv[1]))
+    else:
+        print("Please provide the proper number of command line arguments")
+        sys.exit(1)
+>>>>>>> 030ec9277b9bb96701ea9b2f9f6502a1208c99b7
     rospy.spin()
     return 0
 
