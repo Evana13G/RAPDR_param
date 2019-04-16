@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+ <robot name="bowl">
+  <link name="base_link">
+    <visual>
+     <geometry>
+      <mesh filename="package://environment/models/bowl/bowl.stl"/>
+     </geometry>
+     <material name="red">
+      <color rgba=".8 .8 .8 1"/>
+     </material>
+    </visual>
+    <collision>
+     <geometry>
+      <mesh filename="package://environment/models/bowl/bowl.stl"/>     </geometry>
+    </collision>
+    <inertial>
+      <mass value="10"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
+  </link>
+ </robot>
