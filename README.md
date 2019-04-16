@@ -39,13 +39,21 @@ Each of the following should be run in a separate terminal window:
 
         roslaunch agent UR5.launch
 
-2. Spawn the environment elements (cup and cover)
+2. Spawn the physical agent executor node, responsible for advertising UR5 action services. 
+
+        rosrun agent physical_agent_executor.py
+        
+3. Spawn the environment elements (cup and cover)
 
         rosrun environment initialize_environment.py
 
-3. Spawn data conversion node (converts raw data into predicate form)
+4. Spawn data push_object action service node 
 
-        rosrun agent pick_and_place.py
+        rosrun agent push_object.py
+
+5. Spawn data grasp_object action service node 
+
+        rosrun agent push_object.py
 
 #### Other Info
 
