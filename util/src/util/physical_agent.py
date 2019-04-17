@@ -146,12 +146,13 @@ class PhysicalAgent(object):
         self._disable_all_constraints()
         constraints = Constraints()
         constraints.name = "general_constraints"
-        joint_constraints = []
+        _joint_constraints = []
         if 'push' in _constraints:
-            joint_constraints = joint_constraints + self._generate_push_constraints()
+            _joint_constraints = _joint_constraints + self._generate_push_constraints()
         if 'base' in _constraints:
-            joint_constraints = joint_constraints + self._generate_base_constraints()
-        self._arm_group.set_path_constraints(joint_constraints)
+            _joint_constraints = _joint_constraints + self._generate_base_constraints()
+        constraints.joint_constraints.append(_joint_constraints)
+        self._arm_group.set_path_constraints(constraints)
 
     def _disable_all_constraints(self):
         self._arm_group.set_path_constraints(None)
