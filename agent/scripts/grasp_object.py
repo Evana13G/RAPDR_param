@@ -31,10 +31,12 @@ from agent.srv import *
 CupPose = None
 CoverPose = None
 
-SRVPROXY_move_to_start = rospy.ServiceProxy('move_to_start_srv', MoveToStartSrv)
-SRVPROXY_open_gripper = rospy.ServiceProxy('open_gripper_srv', OpenGripperSrv)
-SRVPROXY_close_gripper = rospy.ServiceProxy('close_gripper_srv', CloseGripperSrv)
-SRVPROXY_approach = rospy.ServiceProxy('approach_srv', ApproachSrv)
+# SRVPROXY_move_to_start = rospy.ServiceProxy('move_to_start_srv', MoveToStartSrv)
+# SRVPROXY_open_gripper = rospy.ServiceProxy('open_gripper_srv', OpenGripperSrv)
+# SRVPROXY_close_gripper = rospy.ServiceProxy('close_gripper_srv', CloseGripperSrv)
+# SRVPROXY_approach = rospy.ServiceProxy('approach_srv', ApproachSrv)
+
+SRVPROXY_grasp = rospy.ServiceProxy('approach_srv', ApproachSrv)
 
 def setPoseCup(data):
     global CupPose
@@ -51,16 +53,13 @@ def handle_graspObject(req):
     poseTo = None
     
     if object_name == "cup":
-        poseTo = CupPose
+        poseTo = CupPose.pose
     elif object_name == "cover":
-        poseTo = CoverPose
+        poseTo = CoverPose.pose
     else:
-        poseTo = CoverPose
+        poseTo = CoverPose.pose
 
-    SRVPROXY_move_to_start()
-    SRVPROXY_open_gripper()
-    SRVPROXY_approach(poseTo)
-    SRVPROXY_close_gripper()
+    SRVPROXY_grasp(poseTo)
     
     return GraspObjectSrvResponse(1)
 

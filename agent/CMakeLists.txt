@@ -23,6 +23,7 @@ CloseGripperSrv.srv
 OpenGripperSrv.srv 
 MoveToObject.srv 
 BrainSrv.srv
+PushSrv.srv 
 PushObjectSrv.srv 
 PartialPlanExecutorSrv.srv
 )

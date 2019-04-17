@@ -43,6 +43,9 @@ def close_gripper(req):
 def approach(req):
     return ApproachSrvResponse(pa.approach(req.pose))
 
+def push(req):
+    return PushSrvResponse(pa.push_from_side(req.startPose, req.endPose))
+
 def main():
     rospy.init_node("physical_agent_node")
 
@@ -52,6 +55,9 @@ def main():
     s_2 = rospy.Service("open_gripper_srv", OpenGripperSrv, open_gripper)
     s_2 = rospy.Service("close_gripper_srv", CloseGripperSrv, close_gripper)
     s_3 = rospy.Service("approach_srv", ApproachSrv, approach)
+
+    # Action Primitives
+    s_4 = rospy.Service("push_srv", PushSrv, push)
 
     rospy.spin()
 
