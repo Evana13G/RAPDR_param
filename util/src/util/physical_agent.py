@@ -90,11 +90,12 @@ class PhysicalAgent(object):
         self.approach(pose)
 
     def push_from_side(self, startPose, endPose):
+        self.gripper_close()
         self._set_constraints(['base'])
         self.move_to_pose(startPose)
         self.move_to_pose(endPose)
 
-####################################################################################################
+###################################################################################################
 ############## Lower Level Action Primitives 
 
     def gripper_open(self, position=0):
@@ -151,7 +152,8 @@ class PhysicalAgent(object):
             _joint_constraints = _joint_constraints + self._generate_push_constraints()
         if 'base' in _constraints:
             _joint_constraints = _joint_constraints + self._generate_base_constraints()
-        constraints.joint_constraints.append(_joint_constraints)
+
+        constraints.joint_constraints = _joint_constraints
         self._arm_group.set_path_constraints(constraints)
 
     def _disable_all_constraints(self):
@@ -192,4 +194,5 @@ class PhysicalAgent(object):
         # wrist_constraint.tolerance_below = 0.1745
         # wrist_constraint.weight = 1
         # constraints.append(wrist_constraint)
+        
         return constraints
