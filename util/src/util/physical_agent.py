@@ -90,9 +90,9 @@ class PhysicalAgent(object):
         self.approach(pose)
 
     def push_from_side(self, startPose, endPose):
-        self.gripper_close()
         self._set_constraints(['base'])
         self.move_to_pose(startPose)
+        self.gripper_close()
         self.move_to_pose(endPose)
 
 ###################################################################################################
@@ -104,7 +104,7 @@ class PhysicalAgent(object):
             print("Gripper opened")
         return 1
 
-    def gripper_close(self, position=1):
+    def gripper_close(self, position=0.8):
         self._move_gripper(position)
         if self._verbose:
             print("Gripper closed")
@@ -138,7 +138,7 @@ class PhysicalAgent(object):
         print(self._robot.get_current_state())
 
     def _move_gripper(self, value):
-        # Value is from 0 to 1, where 0 is an open gripper, and 1 is a closed gripper
+        # Value is from 0 to 1, where 0 is an open gripper, and 1 is a closed gripper        
         jointAngles = [(1*value), (-1*value), (1*value), (1*value), (-1*value), (1*value)]
         self._grp_group.set_joint_value_target(jointAngles)
         self._grp_group.go(wait=True)

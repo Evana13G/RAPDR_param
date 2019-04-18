@@ -57,12 +57,12 @@ def handle_pushObject(req):
         poseTo = CoverPose.pose
 
     startPose = copy.deepcopy(poseTo)
-    startPose.position.y = poseTo.position.y - 0.3
-    startPose.position.x = poseTo.position.x - 0.15
+    startPose.position.y = poseTo.position.y - 0.16
+    startPose.position.x = poseTo.position.x - 0.17
 
     endPose = copy.deepcopy(poseTo)
-    endPose.position.y = poseTo.position.y + 0.3
-    endPose.position.x = poseTo.position.x - 0.15
+    endPose.position.y = poseTo.position.y + 0.16
+    endPose.position.x = poseTo.position.x - 0.17
 
     SRVPROXY_push(startPose, endPose)
 
