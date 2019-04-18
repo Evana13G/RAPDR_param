@@ -68,14 +68,10 @@ class PhysicalAgent(object):
         self._arm_group = moveit_commander.MoveGroupCommander("manipulator")
         self._grp_group = moveit_commander.MoveGroupCommander("gripper")
         self._scene = moveit_commander.PlanningSceneInterface()
-        
-        self._base_constraint = Constraints()
+        constraints = Constraints()
+        constraints.name = "general_constraints"
+        self._constraints = constraints
         self._gripper_down_orientation = tf.transformations.quaternion_from_euler(0, 3.1415/2, 0)
-
-
-####################################################################################################
-
-
 
 ####################################################################################################
 
@@ -114,23 +110,61 @@ class PhysicalAgent(object):
 
 #####################################################################################################
 ######################### Internal Functions
+
+
     def _move_gripper(value):
         # Value is from 0 to 1, where 0 is an open gripper, and 1 is a closed gripper
         jointAngles = [(1*value), (-1*value), (1*value), (1*value), (-1*value), (1*value)]
         self._grp_group.set_joint_value_target(jointAngles)
         self._grp_group.go(wait=True)
 
-    def _enable_base_constraint():
-        arm_group.set_path_constraints(self._base_constraint)
+    def _enable_constraint(constraint_type):
+        
+        if constraint_type == 'base':
+            self._disable_all_constraints()
+            self._set_base_constraint()
+            self._arm_group.set_path_constraints(self._constraints)
+        elif constraint_type == 'push':
+            self._disable_all_constraints()
+            self._set_push_constraint()
+            self._arm_group.set_path_constraints(self._constraints)
+        else:
+            if self._verbose:
+                print('Constraints remaining the same')
 
-    def _disable_constraint():
-        arm_group.set_path_constraints(None)
+    def _disable_all_constraints():
+        self._arm_group.set_path_constraints(None)
 
-    def _init_base_constraint():
+    def _set_base_constraint():
         joint_constraint = JointConstraint()
         joint_constraint.joint_name = "shoulder_pan_joint"
         joint_constraint.position = 0
         joint_constraint.tolerance_above = 0.7854
         joint_constraint.tolerance_below = 0.7854
         joint_constraint.weight = 1
-        self._base_constraint.joint_constraints.append(joint_constraint)
+        self._constraints.joint_constraints.append(joint_constraint)
+
+    def _set_push_constraint():
+        shoulder_constraint = JointConstraint()
+        shoulder_constraint.joint_name = "shoulder_lift_joint"
+        shoulder_constraint.position = -0.37754034809990955 #Obtained from looking at a good run in Gazebo
+        shoulder_constraint.tolerance_above = 0.7853 #45 degrees
+        shoulder_constraint.tolerance_below = 0.7853
+        shoulder_constraint.weight = 1
+        self._constraints.joint_constraints.append(shoulder_constraint)
+
+        elbow_constraint = JointConstraint()
+        elbow_constraint.joint_name = "elbow_joint"
+        elbow_constraint.position = 0.6780465480943496
+        elbow_constraint.tolerance_above = 0.7853
+        elbow_constraint.tolerance_below = 0.7853
+        elbow_constraint.weight = 1
+        self._constraints.joint_constraints.append(elbow_constraint)
+
+        # wrist_constraint = JointConstraint()
+        # wrist_constraint.joint_name = "wrist_3_joint"
+        # wrist_constraint.position = 0
+        # wrist_constraint.tolerance_above = 0.1745
+        # wrist_constraint.tolerance_below = 0.1745
+        # wrist_constraint.weight = 1
+        # self._constraints.joint_constraints.append(wrist_constraint)
