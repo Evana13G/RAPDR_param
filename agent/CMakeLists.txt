@@ -10,15 +10,16 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
 )
 
-add_message_files(
-  FILES
-)
+#add_message_files(
+#  FILES
+#)
 
 add_service_files(
 FILES 
 ApproachSrv.srv
 MoveToStartSrv.srv
 GraspObjectSrv.srv
+GraspSrv.srv
 CloseGripperSrv.srv 
 OpenGripperSrv.srv 
 MoveToObject.srv 

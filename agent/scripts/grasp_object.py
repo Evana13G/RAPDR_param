@@ -36,15 +36,15 @@ CoverPose = None
 # SRVPROXY_close_gripper = rospy.ServiceProxy('close_gripper_srv', CloseGripperSrv)
 # SRVPROXY_approach = rospy.ServiceProxy('approach_srv', ApproachSrv)
 
-SRVPROXY_grasp = rospy.ServiceProxy('approach_srv', ApproachSrv)
+SRVPROXY_grasp = rospy.ServiceProxy('grasp_srv', GraspSrv)
 
 def setPoseCup(data):
     global CupPose
-    CupPose = data.pose
+    CupPose = data
 
 def setPoseCover(data):
     global CoverPose
-    CoverPose = data.pose
+    CoverPose = data
 
 def handle_graspObject(req):
     
@@ -59,7 +59,12 @@ def handle_graspObject(req):
     else:
         poseTo = CoverPose.pose
 
-    SRVPROXY_grasp(poseTo)
+    graspPose = copy.deepcopy(poseTo)
+    # graspPose.position.x = poseTo.position.x - 0.17
+    # graspPose.position.y = poseTo.position.y - 0.16
+    graspPose.position.z = poseTo.position.z + 0.1
+
+    SRVPROXY_grasp(graspPose)
     
     return GraspObjectSrvResponse(1)
 

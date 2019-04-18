@@ -72,22 +72,17 @@ class PhysicalAgent(object):
 ####################################################################################################
 ############## Higher Level Action Primitives 
 
-### Push Object
-### Grasp Object
-
-    def pick(self, pose):
-        self.move_gripper(0)
-        self.approach(pose)
-        rospy.sleep(1)
-        self.move_gripper(0.33)
-        rospy.sleep(1)
-        self.move_to_start()
-
-    def place(self, pose):
-        self.approach(pose)
-        self.move_to_pose(pose)
+    def grasp(self, pose):
         self.gripper_open()
         self.approach(pose)
+        rospy.sleep(1)
+        self.gripper_close(0.33) # Depends on the object 
+
+    # def place(self, pose):
+    #     self.approach(pose)
+    #     self.move_to_pose(pose)
+    #     self.gripper_open()
+    #     self.approach(pose)
 
     def push_from_side(self, startPose, endPose):
         self._set_constraints(['base'])

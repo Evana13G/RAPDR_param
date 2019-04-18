@@ -46,6 +46,9 @@ def approach(req):
 def push(req):
     return PushSrvResponse(pa.push_from_side(req.startPose, req.endPose))
 
+def grasp(req):
+    return GraspSrvResponse(pa.grasp(req.graspPose))
+
 def main():
     rospy.init_node("physical_agent_node")
 
@@ -58,6 +61,7 @@ def main():
 
     # Action Primitives
     s_4 = rospy.Service("push_srv", PushSrv, push)
+    s_4 = rospy.Service("grasp_srv", GraspSrv, grasp)
 
     rospy.spin()
 
