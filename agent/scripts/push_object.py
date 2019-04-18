@@ -30,10 +30,12 @@ from util.physical_agent import PhysicalAgent
 CupPose = None
 CoverPose = None
 
-SRVPROXY_move_to_start = rospy.ServiceProxy('move_to_start_srv', MoveToStartSrv)
-SRVPROXY_open_gripper = rospy.ServiceProxy('open_gripper_srv', OpenGripperSrv)
-SRVPROXY_close_gripper = rospy.ServiceProxy('close_gripper_srv', CloseGripperSrv)
-SRVPROXY_approach = rospy.ServiceProxy('approach_srv', ApproachSrv)
+# SRVPROXY_move_to_start = rospy.ServiceProxy('move_to_start_srv', MoveToStartSrv)
+# SRVPROXY_open_gripper = rospy.ServiceProxy('open_gripper_srv', OpenGripperSrv)
+# SRVPROXY_close_gripper = rospy.ServiceProxy('close_gripper_srv', CloseGripperSrv)
+# SRVPROXY_approach = rospy.ServiceProxy('approach_srv', ApproachSrv)
+
+SRVPROXY_push = rospy.ServiceProxy('push_srv', PushSrv)
 
 def setPoseCup(data):
     global CupPose
@@ -48,19 +50,25 @@ def handle_pushObject(req):
     obj = req.objectName
 
     if obj == 'cup': 
-        poseTo = CupPose
+        poseTo = CupPose.pose
     elif obj == 'cover':
-        poseTo = CoverPose
+        poseTo = CoverPose.pose
     else:
-        poseTo = CoverPose
+        poseTo = CoverPose.pose
 
-    SRVPROXY_approach(poseTo)
+    startPose = copy.deepcopy(poseTo)
+    startPose.position.y = poseTo.position.y - 0.3
+
+    endPose = copy.deepcopy(poseTo)
+    endPose.position.y = poseTo.position.y + 0.3
+
+    SRVPROXY_push(startPose, endPose)
 
     return PushObjectSrvResponse(1)
 
 
 def main():
-    rospy.init_node("push_button_node")
+    rospy.init_node("push_object_node")
 
     rospy.Subscriber("cover_pose", PoseStamped, setPoseCover)
     rospy.Subscriber("cup_pose", PoseStamped, setPoseCup)
