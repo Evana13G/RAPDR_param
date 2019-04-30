@@ -31,6 +31,32 @@ from util.physical_agent import PhysicalAgent
 
 pa = None
 
+CupPose = None
+CoverPose = None
+
+def setPoseCup(data):
+    global CupPose
+    CupPose = data
+    
+def setPoseCover(data):
+    global CoverPose
+    CoverPose = data
+
+################################################################################
+def getObjectPose(obj, offset=True):
+    if obj == 'cup': 
+        poseTo = CupPose.pose
+    elif obj == 'cover':
+        poseTo = CoverPose.pose
+    else:
+        poseTo = CoverPose.pose
+
+    adjustedPose = copy.deepcopy(poseTo)
+    if offset == True:
+        adjustedPose.position.x = poseTo.position.x - 0.15
+    return adjustedPose
+
+################################################################################
 def move_to_start(req):
     return MoveToStartSrvResponse(pa.move_to_start())
 
@@ -43,17 +69,45 @@ def close_gripper(req):
 def approach(req):
     return ApproachSrvResponse(pa.approach(req.pose))
 
+################################################################################
+
 def push(req):
-    return PushSrvResponse(pa.push_from_side(req.startPose, req.endPose))
+    objPose = getObjectPose(req.objectName)
+    start_offset = req.startOffset
+    ending_offset = req.endOffset
+    return PushSrvResponse(pa.push(objPose, start_offset, ending_offset))
 
 def grasp(req):
-    return GraspSrvResponse(pa.grasp(req.graspPose))
+    objPose = getObjectPose(req.objectName)
+    return GraspSrvResponse(pa.grasp(objPose))
+
+def shake(req):
+    objPose = getObjectPose(req.objectName)
+    twist_range = req.twistRange
+    speed = req.speed
+    return ShakeSrvResponse(pa.shake(req.shakePose, twist_range, speed))
+
+def press(req):
+    objPose = getObjectPose(req.objectName)
+    hover_distance = req.hoverDistance
+    press_amount = req.pressAmount
+    return PressSrvResponse(pa.press(objPose, hover_distance, press_amount))
+
+def drop(req):
+    objPose = getObjectPose(req.objectName)
+    drop_height = req.dropHeight
+    return DropSrvResponse(pa.drop(objPose, drop_height))
 
 def main():
     rospy.init_node("physical_agent_node")
 
     global pa
     pa = PhysicalAgent()
+
+    rospy.Subscriber("cover_pose", PoseStamped, setPoseCover)
+    rospy.Subscriber("cup_pose", PoseStamped, setPoseCup)
+
+
     s_1 = rospy.Service("move_to_start_srv", MoveToStartSrv, move_to_start)
     s_2 = rospy.Service("open_gripper_srv", OpenGripperSrv, open_gripper)
     s_2 = rospy.Service("close_gripper_srv", CloseGripperSrv, close_gripper)
@@ -61,7 +115,10 @@ def main():
 
     # Action Primitives
     s_4 = rospy.Service("push_srv", PushSrv, push)
-    s_4 = rospy.Service("grasp_srv", GraspSrv, grasp)
+    s_5 = rospy.Service("grasp_srv", GraspSrv, grasp)
+    s_6 = rospy.Service("shake_srv", ShakeSrv, shake)
+    s_7 = rospy.Service("press_srv", PressSrv, press)
+    s_8 = rospy.Service("drop_srv", DropSrv, drop)
 
     rospy.spin()
 

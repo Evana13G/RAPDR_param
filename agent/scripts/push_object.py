@@ -27,46 +27,12 @@ from std_msgs.msg import (
 from agent.srv import *
 from util.physical_agent import PhysicalAgent
 
-CupPose = None
-CoverPose = None
-
-# SRVPROXY_move_to_start = rospy.ServiceProxy('move_to_start_srv', MoveToStartSrv)
-# SRVPROXY_open_gripper = rospy.ServiceProxy('open_gripper_srv', OpenGripperSrv)
-# SRVPROXY_close_gripper = rospy.ServiceProxy('close_gripper_srv', CloseGripperSrv)
-# SRVPROXY_approach = rospy.ServiceProxy('approach_srv', ApproachSrv)
-
 SRVPROXY_push = rospy.ServiceProxy('push_srv', PushSrv)
 
-def setPoseCup(data):
-    global CupPose
-    CupPose = data
-    
-def setPoseCover(data):
-    global CoverPose
-    CoverPose = data
-
 def handle_pushObject(req):
-
-    obj = req.objectName
-
-    if obj == 'cup': 
-        poseTo = CupPose.pose
-    elif obj == 'cover':
-        poseTo = CoverPose.pose
-    else:
-        poseTo = CoverPose.pose
-
-    startPose = copy.deepcopy(poseTo)
-    startPose.position.x = poseTo.position.x - 0.17
-    startPose.position.y = poseTo.position.y - 0.16
-    startPose.position.z = poseTo.position.z + 0.01
-
-    endPose = copy.deepcopy(poseTo)
-    endPose.position.x = poseTo.position.x - 0.17
-    endPose.position.y = poseTo.position.y + 0.16
-    endPose.position.z = poseTo.position.z + 0.01
-
-    SRVPROXY_push(startPose, endPose)
+    start_offset = -0.1
+    end_offset = 0.15
+    SRVPROXY_push(req.objectName, start_offset, end_offset)
 
     return PushObjectSrvResponse(1)
 
@@ -74,9 +40,6 @@ def handle_pushObject(req):
 def main():
     rospy.init_node("push_object_node")
 
-    rospy.Subscriber("cover_pose", PoseStamped, setPoseCover)
-    rospy.Subscriber("cup_pose", PoseStamped, setPoseCup)
- 
     s = rospy.Service("push_object_srv", PushObjectSrv, handle_pushObject)
 
     rospy.spin()

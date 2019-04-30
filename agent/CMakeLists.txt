@@ -27,6 +27,12 @@ BrainSrv.srv
 PushSrv.srv 
 PushObjectSrv.srv 
 PartialPlanExecutorSrv.srv
+ShakeObjectSrv.srv
+ShakeSrv.srv
+PressObjectSrv.srv
+PressSrv.srv
+DropObjectSrv.srv
+DropSrv.srv
 )
 
 generate_messages(DEPENDENCIES std_msgs geometry_msgs)

@@ -1,4 +1,5 @@
-geometry_msgs/Pose startPose
-geometry_msgs/Pose endPose
+string objectName 
+int64 startOffset
+int64 endOffset
 ---
 int64 success_bool

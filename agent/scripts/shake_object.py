@@ -24,20 +24,27 @@ from std_msgs.msg import (
     Empty,
 )
 
-from tf.transformations import *
-
 from agent.srv import *
+from util.physical_agent import PhysicalAgent
 
-SRVPROXY_grasp = rospy.ServiceProxy('grasp_srv', GraspSrv)
+SRVPROXY_shake = rospy.ServiceProxy('shake_srv', ShakeSrv)
 
-def handle_graspObject(req):
-    SRVPROXY_grasp(req.objectName)
-    return GraspObjectSrvResponse(1)
+def handle_shakeObject(req):
+
+    twist_range = 1
+    speed = 1
+
+    SRVPROXY_shake(req.objectName, twist_range, speed)
+
+    return ShakeObjectSrvResponse(1)
 
 def main():
-    rospy.init_node("grasp_object_node")
-    s = rospy.Service("grasp_object_srv", GraspObjectSrv, handle_graspObject)
+    rospy.init_node("shake_object_node")
+
+    s = rospy.Service("shake_object_srv", ShakeObjectSrv, handle_shakeObject)
+
     rospy.spin()
+    
     return 0
 
 if __name__ == '__main__':
