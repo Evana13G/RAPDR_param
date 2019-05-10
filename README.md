@@ -53,7 +53,7 @@ Each of the following should be run in a separate terminal window:
 
 5. Spawn data grasp_object action service node 
 
-        rosrun agent push_object.py
+        rosrun agent grasp_object.py
 
 #### Other Info
 
